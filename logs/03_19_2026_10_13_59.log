@@ -1,0 +1,4 @@
+[2026-03-19 10:14:00,330] [Line:21] [root] [INFO] - Entered the Data ingestion method or component
+[2026-03-19 10:14:01,030] [Line:24] [root] [INFO] - Read the dataset as dataframe
+[2026-03-19 10:14:01,620] [Line:28] [root] [INFO] - Train test split Initiated
+[2026-03-19 10:14:02,952] [Line:34] [root] [INFO] - Ingestion of train and test data completed
