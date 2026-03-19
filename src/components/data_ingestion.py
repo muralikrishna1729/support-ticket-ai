@@ -11,6 +11,7 @@ class DataIngestionConfig:
     train_data_path:str = os.path.join("artifacts",'train.csv')
     test_data_path:str = os.path.join("artifacts",'test.csv')
     raw_data_path:str = os.path.join('artifacts','data.csv')
+    source_data_path:str = os.path.join('notebook/data','tickets-dataset.csv')
 
 
 class DataIngestion:
@@ -20,12 +21,15 @@ class DataIngestion:
     def initiate_data_ingestion(self):
         logging.info("Entered the Data ingestion method or component")
         try:
-            df = pd.read_csv("notebook/data/aa_dataset-tickets-multi-lang-5-2-50-version.csv")
+            df = pd.read_csv(self.ingestion_config.source_data_path)
+            if df.empty:
+                raise Exception("Dataset is empty")
             logging.info("Read the dataset as dataframe")
+            logging.info(f"Dataset shape: {df.shape}")
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
 
             # Creating Train and Test csv files and save it in data paths.
-            
+
             df.to_csv(self.ingestion_config.raw_data_path,index = False, header= True)
             logging.info("Train test split Initiated")
 

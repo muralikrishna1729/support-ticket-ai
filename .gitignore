@@ -35,7 +35,7 @@ ENV/
 .env.*
 
 # 🔹 Logs
-# *.log
+*.log
 
 # 🔹 Jupyter Notebook
 .ipynb_checkpoints
@@ -68,19 +68,19 @@ db.sqlite3
 *~
 
 # 🔹 ML / Data Science (important for you)
-# data/
+data/
 # datasets/
 # *.csv
 # *.tsv
 # *.zip
 # *.tar.gz
 
-# # 🔹 Model files
-# *.pkl
-# *.joblib
-# *.h5
-# *.pt
-# *.ckpt
+# 🔹 Model files
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.ckpt
 
 # 🔹 AWS / credentials (VERY IMPORTANT)
 *.pem
