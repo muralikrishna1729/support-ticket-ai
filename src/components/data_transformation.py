@@ -1,5 +1,6 @@
 import os 
 import sys
+import re
 import pandas as pd 
 import numpy as np 
 from sklearn.preprocessing import LabelEncoder
@@ -57,8 +58,8 @@ class DataTransformation:
             le_category   = LabelEncoder()
             le_issue_type = LabelEncoder()
 
-            train_df['category_enc'] = le_category.fit_transformation(train_df["category"])
-            train_df['issue_type_enc'] = le_category.fit_transformation(train_df["issue_type"])
+            train_df['category_enc'] = le_category.fit_transform(train_df["category"])
+            train_df['issue_type_enc'] = le_issue_type.fit_transform(train_df["issue_type"])
 
             test_df['category_enc']   = le_category.transform(test_df['category'])
             test_df['issue_type_enc'] = le_issue_type.transform(test_df['issue_type'])
@@ -105,8 +106,6 @@ class DataTransformation:
                 class_weight_dict,
                 le_category, le_issue_type
             )
-
-
         except Exception as e:
             raise CustomException(e,sys)
 

@@ -5,7 +5,8 @@ from dataclasses import dataclass
 from sklearn.model_selection import train_test_split
 from src.logger import logger
 from src.exception import CustomException 
-
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
 
 @dataclass
 class DataIngestionConfig:
@@ -34,7 +35,7 @@ class DataIngestion:
             df = df[df["text"].str.strip() != ""].reset_index(drop = True)
             logger.info(f"Final shape after cleaning: {df.shape}")
 
-            os.makedirs(os.path.dirname(self.config.raw_data_path))
+            os.makedirs(os.path.dirname(self.config.raw_data_path),exist_ok=True)
             df.to_csv(self.config.raw_data_path, index= False)
 
 
@@ -63,3 +64,7 @@ if __name__ == "__main__":
     obj = DataIngestion()
     train_data, test_data = obj.initiate_data_ingestion("notebook/data/tickets-dataset.csv")
     logger.info("Data Ingestion Completed.")
+
+    data_transformation = DataTransformation()
+    X_train, X_test, y_train_cat,  y_test_cat,y_train_type, y_test_type,class_weight_dict,le_category, le_issue_type  = data_transformation.initiate_data_transformation(train_data,test_data)
+    logger.info("Data Transformation Completed.")
