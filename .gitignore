@@ -76,11 +76,11 @@ data/
 # *.tar.gz
 
 # 🔹 Model files
-*.pkl
-*.joblib
-*.h5
-*.pt
-*.ckpt
+# *.pkl
+# *.joblib
+# *.h5
+# *.pt
+# *.ckpt
 
 # 🔹 AWS / credentials (VERY IMPORTANT)
 *.pem

@@ -26,7 +26,7 @@ class DataIngestion:
             df = df[df["language"]== "en"].reset_index(drop = True)
             logger.info(f"After Engilsh Filter data loaded: {df.shape}")
 
-            df['text'] = (df['subject'].fillna(" ")+" "+df["body"].fillna(" ")).strip()
+            df['text'] = (df['subject'].fillna(" ")+" "+df["body"].fillna(" ")).str.strip()
 
             df = df[["text",'queue','type']].rename(columns = {"queue":"category", "type":"issue_type"})
 
@@ -59,3 +59,7 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e,sys)
 
+if __name__ == "__main__":
+    obj = DataIngestion()
+    train_data, test_data = obj.initiate_data_ingestion("notebook/data/tickets-dataset.csv")
+    logger.info("Data Ingestion Completed.")
