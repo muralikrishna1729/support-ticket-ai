@@ -37,3 +37,14 @@ def save_json(file_path:str,data:dict)->None:
         logger.info(f"JSON saved → {file_path}")
     except Exception as e:
         raise CustomException(e,sys)
+
+def load_obj(file_path:str)->dict:
+    try:
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Model Was not Found:{file_path}")
+        obj = joblib.load(file_path)
+        logger.info(f"Object loaded ← {file_path}")
+        return obj
+        
+    except Exception as e:
+        raise CustomException(e,sys)
