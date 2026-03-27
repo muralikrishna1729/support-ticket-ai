@@ -7,6 +7,8 @@ from src.logger import logger
 from src.exception import CustomException 
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransformationConfig
+from src.components.model_trainer import ModelTrainer
+from src.components.model_trainer import ModelTrainerConfig
 
 @dataclass
 class DataIngestionConfig:
@@ -28,7 +30,6 @@ class DataIngestion:
             logger.info(f"After Engilsh Filter data loaded: {df.shape}")
 
             df['text'] = (df['subject'].fillna(" ")+" "+df["body"].fillna(" ")).str.strip()
-
             df = df[["text",'queue','type']].rename(columns = {"queue":"category", "type":"issue_type"})
 
             logger.info(f"Dropping the Empty : {df.shape}")
@@ -60,11 +61,5 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e,sys)
 
-if __name__ == "__main__":
-    obj = DataIngestion()
-    train_data, test_data = obj.initiate_data_ingestion("notebook/data/tickets-dataset.csv")
-    logger.info("Data Ingestion Completed.")
 
-    data_transformation = DataTransformation()
-    X_train, X_test, y_train_cat,  y_test_cat,y_train_type, y_test_type,class_weight_dict,le_category, le_issue_type  = data_transformation.initiate_data_transformation(train_data,test_data)
-    logger.info("Data Transformation Completed.")
+

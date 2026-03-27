@@ -5,6 +5,8 @@ import joblib
 import numpy as np 
 from src.exception import CustomException
 from src.logger import logger
+from sklearn.metrics import f1_score
+
 
 
 def save_object(file_path:str,obj)->None:
@@ -18,3 +20,20 @@ def save_object(file_path:str,obj)->None:
         raise CustomException(e,sys)
 
 
+def evaluate_model(clf, X_val,y_val)->float:
+    try:
+        y_pred = clf.predict(X_val)
+        score = f1_score(y_val,y_pred, average = 'weighted')
+        return round(float(score),4)
+    
+    except Exception as e:
+        raise CustomException(e,sys)
+
+def save_json(file_path:str,data:dict)->None:
+    try:
+        os.makedirs(os.path.dirname(file_path),exist_ok=True)
+        with open(file_path,"w") as f:
+            json.dump(data,f, indent=2)
+        logger.info(f"JSON saved → {file_path}")
+    except Exception as e:
+        raise CustomException(e,sys)
