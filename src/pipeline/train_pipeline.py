@@ -1,5 +1,6 @@
 import sys 
 import os 
+import argparse
 from src.exception import CustomException
 from src.logger import logger
 from src.components.data_ingestion import DataIngestion
@@ -41,9 +42,12 @@ class TrainPipeline:
             raise CustomException(e, sys)
 
 if __name__== "__main__":
-    source_path = "notebook/data/tickets-dataset.csv"
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--source_path", type=str , required=True,help = "Path for Input Data")
+    args = parser.parse_args()
     pipeline = TrainPipeline()
-    f1_cat,f1_type = pipeline.run(source_path)
-    print(f"\n✅ Training complete!")
+    f1_cat,f1_type = pipeline.run(args.source_path)
+    print(f"\n Training complete!")
     print(f"   Category F1   : {f1_cat}")
     print(f"   Issue Type F1 : {f1_type}")
