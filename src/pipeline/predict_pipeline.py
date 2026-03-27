@@ -4,7 +4,7 @@ import argparse
 from src.exception import CustomException
 from src.components.data_transformation import DataTransformation
 from src.logger import logger
-from src.utils import load_obj
+from src.utils import load_object
 RESPONSES = {
     "Technical Support"              : "Our technical team has been notified and will respond within 4 hours.",
     "Billing and Payments"           : "Our billing team will review your case and contact you within 24 hours.",
@@ -50,5 +50,13 @@ class PredictPipeline:
         except Exception as e:
             raise CustomException(e,sys)      
 
+if __name__== "__main__":
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ticket", type=str,required=True,help = "enter your query")
+    Predict = PredictPipeline() 
+    args = parser.parse_args()
+
+    result = Predict.predict(args.ticket)
+    print(result)
         

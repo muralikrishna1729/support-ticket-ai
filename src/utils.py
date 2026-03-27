@@ -38,7 +38,7 @@ def save_json(file_path:str,data:dict)->None:
     except Exception as e:
         raise CustomException(e,sys)
 
-def load_obj(file_path:str)->dict:
+def load_object(file_path:str)->dict:
     try:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Model Was not Found:{file_path}")
