@@ -4,8 +4,12 @@ from src.logger import logger
 from src.pipeline.predict_pipeline import PredictPipeline
 from fastapi import FastAPI
 from pydantic import BaseModel
+from src.api.routes import router
+from src.db.database import Base, engine
 
 app = FastAPI(title = "SmartTicket AI")
+Base.metadata.create_all(bind = engine)
+app.include_router(router)
 pipeline = PredictPipeline()
 
 class InputITicket(BaseModel):
@@ -19,14 +23,7 @@ def home():
 def health():
     return {"status": "healthy"}
 
-@app.post("/predict")
-def predict(data:InputITicket):
-    result = pipeline.predict(data.ticket)
-    return {
-        "category"      : result["category"],
-        "issue_type"    : result["issue_type"],
-        "auto_response" : result["auto_response"]
-    }
+
 
 
 

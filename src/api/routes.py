@@ -1,0 +1,29 @@
+## this includes creating routes and defining their functionality using db operations.
+
+
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from src.db.database import sessionLocal
+from src.db import schemas
+from src.services import ticket_service
+
+router = APIRouter()
+def get_db():
+    db = sessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@router.post("/tickets", response_model = schemas.TicketResponse)
+def create_ticket(data:schemas.TicketCreate, db:Session = Depends(get_db)):
+    ticket = ticket_service.create_ticket(db, data.ticket)
+    ticket = ticket_service.process_ticket(db,ticket.id)
+    return ticket
+
+@router.get("/tickets/{ticket_id}", response_model=schemas.TicketResponse)
+def get_ticket(ticket_id:int,db:Session = Depends(get_db)):
+    ticket = ticket_service.get_ticket(db,ticket_id)
+    if not ticket:
+        raise HTTPException(status_code = 404, detail = "Ticket was not found")
+    return ticket

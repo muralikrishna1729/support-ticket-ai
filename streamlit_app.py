@@ -42,7 +42,7 @@ if classify_btn:
         with st.spinner("Classifying..."):
             try:
                 response = requests.post(
-                    f"{API_URL}/predict",
+                    f"{API_URL}/tickets",
                     json = {"ticket": ticket}
                 )
                 result = response.json()
