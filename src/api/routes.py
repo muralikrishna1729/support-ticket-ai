@@ -1,7 +1,7 @@
 ## this includes creating routes and defining their functionality using db operations.
 
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from src.db.database import sessionLocal
 from src.db import schemas
@@ -16,9 +16,12 @@ def get_db():
         db.close()
 
 @router.post("/tickets", response_model = schemas.TicketResponse)
-def create_ticket(data:schemas.TicketCreate, db:Session = Depends(get_db)):
+def create_ticket(data:schemas.TicketCreate,background_tasks: BackgroundTasks, db:Session = Depends(get_db)):
     ticket = ticket_service.create_ticket(db, data.ticket)
-    ticket = ticket_service.process_ticket(db,ticket.id)
+    background_tasks.add_task(
+        ticket_service.process_ticket_background(ticket.id),
+        ticket.id
+    )
     return ticket
 
 @router.get("/tickets/{ticket_id}", response_model=schemas.TicketResponse)

@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
+import time
 
 # ── Config ────────────────────────────────────────────────────────
 API_URL = "http://localhost:8000"
@@ -27,9 +28,9 @@ ticket = st.text_area(
 
 col1, col2 = st.columns([2, 1])
 with col1:
-    classify_btn = st.button(" Classify Ticket", type="primary", use_container_width=True)
+    classify_btn = st.button(" Classify Ticket", type="primary", width='stretch')
 with col2:
-    if st.button("🗑️ Clear History", use_container_width=True):
+    if st.button("🗑️ Clear History", width='stretch'):
         st.session_state.history = []
         st.rerun()
 
@@ -40,35 +41,43 @@ if classify_btn:
 
     else:
         with st.spinner("Classifying..."):
-            try:
-                response = requests.post(
-                    f"{API_URL}/tickets",
-                    json = {"ticket": ticket}
-                )
-                result = response.json()
+            response = requests.post(
+                f"{API_URL}/tickets",
+                json={"ticket": ticket}
+            )
+            result = response.json()
+            ticket_id = result["id"]
+            st.info(f"Ticket #{ticket_id} submitted! Status: {result['status']}")
 
-                
-                st.divider()
-                st.subheader(" Result")
+        with st.spinner("Processing...."):
+            for _ in range(10):
+                time.sleep(1)
+                poll = requests.get(f"{API_URL}/tickets/{ticket_id}")
+                data = poll.json()
+                if data["status"] == "completed":
+                    st.divider()
+                    st.subheader(" Result")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Category",   data["category"])
+                    with col2:
+                        st.metric("Issue Type", data["issue_type"])
+                    st.info(f" {data['auto_response']}")
 
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.metric("Category",   result["category"])
-                with col2:
-                    st.metric("Issue Type", result["issue_type"])
+                    # Save history
+                    st.session_state.history.append({
+                        "Ticket"     : ticket[:60],
+                        "Category"   : data["category"],
+                        "Issue Type" : data["issue_type"],
+                        "Status"     : data["status"]
+                    })
+                    break
 
-                st.info(f" **Auto Response:** {result['auto_response']}")
-
-                
-                st.session_state.history.append({
-                    "Ticket"        : ticket[:60] + "..." if len(ticket) > 60 else ticket,
-                    "Category"      : result["category"],
-                    "Issue Type"    : result["issue_type"],
-                    "Auto Response" : result["auto_response"]
-                })
-
-            except Exception as e:
-                st.error(f"Could not connect to API: {str(e)}")
+                elif data["status"] == "failed":
+                    st.error("Processing failed.")
+                    break
+            else:
+                st.warning("Still processing — check back in a moment.")
 
 
 if st.session_state.history:
@@ -76,9 +85,8 @@ if st.session_state.history:
     st.subheader(f" Session History ({len(st.session_state.history)} tickets)")
 
     df = pd.DataFrame(st.session_state.history)
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.dataframe(df, width='stretch', hide_index=True)
 
-    
     csv = df.to_csv(index=False)
     st.download_button(
         label     = "⬇️ Download History as CSV",
