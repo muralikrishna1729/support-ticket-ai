@@ -5,6 +5,7 @@ from src.db import models
 from src.logger import logger
 from src.pipeline.predict_pipeline import PredictPipeline
 
+
 pipeline = PredictPipeline()
 def create_ticket(db:Session,ticket_text:str):
     ticket = models.Ticket(
@@ -30,7 +31,8 @@ def process_ticket(db:Session,ticket_id:int):
         ticket.status = "completed"
     
     except Exception as e:
-        ticket.status = "Failed"
+        logger.error(f"Prediction failed for ticket {ticket_id}: {str(e)}")
+        ticket.status = "failed"
     db.commit()
     db.refresh(ticket)
     return ticket
