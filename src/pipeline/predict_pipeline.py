@@ -5,6 +5,11 @@ from src.exception import CustomException
 from src.components.data_transformation import DataTransformation
 from src.logger import logger
 from src.utils import load_object
+import os
+import sys 
+
+from aws.s3_client import download_file
+
 RESPONSES = {
     "Technical Support"              : "Our technical team has been notified and will respond within 4 hours.",
     "Billing and Payments"           : "Our billing team will review your case and contact you within 24 hours.",
@@ -17,8 +22,36 @@ RESPONSES = {
     "Human Resources"                : "HR team received your request and will respond within 2 business days.",
     "General Inquiry"                : "Thank you for reaching out. We will respond within 24 hours.",
 }
+
+MODEL_PATHS = {
+    "tfidf"         : "models/tfidf_vectorizer.pkl",
+    "clf_category"  : "models/clf_category.pkl",
+    "clf_issue_type": "models/clf_issue_type.pkl",
+    "le_category"   : "models/le_category.pkl",
+    "le_issue_type" : "models/le_issue_type.pkl",
+}
+def ensure_models_exist():
+    """Download models from S3 if not present locally."""
+    missing = [
+        path for path in MODEL_PATHS.values()
+        if not os.path.exists(path)
+    ]
+
+    if not missing:
+        logger.info("All models found locally ")
+        return
+
+    logger.info(f"{len(missing)} model(s) missing locally → downloading from S3")
+
+    from aws.s3_client import download_file
+    for local_path in missing:
+        download_file(s3_key=local_path, local_path=local_path)
+
+
+
 class PredictPipeline:
     def __init__(self):
+        ensure_models_exist()
         logger.info("Loading model artifacts...")
         self.tfidf          = load_object("models/tfidf_vectorizer.pkl")
         self.clf_category   = load_object("models/clf_category.pkl")

@@ -1,6 +1,6 @@
 {
   "model_version": "v1.0",
-  "f1_category": 0.677,
-  "f1_issue_type": 0.8848,
+  "f1_category": 0.6795,
+  "f1_issue_type": 0.886,
   "best_C": 2.0
 }
