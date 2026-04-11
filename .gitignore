@@ -97,3 +97,5 @@ instance/
 # 🔹 Docker
 *.pid
 *.seed
+
+models/*.pkl
