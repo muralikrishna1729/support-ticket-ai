@@ -73,11 +73,13 @@ class DataTransformation:
 
             logger.info("Fitting TF-IDF...")
             tfidf = TfidfVectorizer(
-                max_features = 20000,
+                max_features = 25000,    # increased from 20000
                 ngram_range  = (1, 3),
                 min_df       = 2,
                 max_df       = 0.85,
                 sublinear_tf = True,
+                analyzer     = 'word',
+                token_pattern= r'\b[a-zA-Z]{3,}\b'  # only words 3+ chars
             )
 
             X_train = tfidf.fit_transform(train_df['clean_text'])

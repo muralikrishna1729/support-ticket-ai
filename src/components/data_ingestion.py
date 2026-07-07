@@ -11,7 +11,7 @@ class DataIngestionConfig:
     train_data_path:str = os.path.join("artifacts",'train.csv')
     test_data_path:str = os.path.join("artifacts",'test.csv')
     raw_data_path:str = os.path.join('artifacts','data.csv')
-    source_data_path:str = os.path.join('notebook/data','tickets-dataset.csv')
+    source_data_path: str = os.path.join('notebook/data', 'dataset-tickets-multi-lang-4-20k.csv')
 
 
 class DataIngestion:
@@ -20,18 +20,34 @@ class DataIngestion:
     
     def initiate_data_ingestion(self, source_path: str):
         logger.info("=== Data Ingestion Started ===")
-        logger.info("Entered the Data ingestion method or component")
         try:
+            # Load primary dataset
             df = pd.read_csv(source_path)
-            if df.empty:
-                raise Exception("Dataset is empty")
-            logger.info("Read the dataset as dataframe")
-            logger.info(f"Dataset shape: {df.shape}")
-            df = df[df["language"]=="en"].reset_index(drop=True)
+            logger.info(f"Primary dataset: {df.shape}")
+
+            # Combine with 4k multilang dataset
+            extra_path = "notebook/data/dataset-tickets-multi-lang3-4k.csv"
+            if os.path.exists(extra_path):
+                df_extra = pd.read_csv(extra_path)
+                required = ['language', 'queue', 'type', 'body', 'subject']
+                if all(col in df_extra.columns for col in required):
+                    df = pd.concat([df, df_extra], ignore_index=True)
+                    logger.info(f"Combined with 4k dataset → {df.shape}")
+
+            # Drop duplicates
+            before = len(df)
+            df = df.drop_duplicates(subset=['body']).reset_index(drop=True)
+            logger.info(f"Dropped {before - len(df)} duplicates → {df.shape}")
+
+            # Filter English only
+            df = df[df['language'] == 'en'].reset_index(drop=True)
             logger.info(f"After English filter: {df.shape}")
 
             # Combine subject + body
-            df["text"] = (df["subject"].fillna('')+' '+df['body'].fillna('')).str.strip()
+            df['text'] = (
+                df['subject'].fillna('') + ' ' +
+                df['body'].fillna('')
+            ).str.strip()
 
             # Select relevant columns
             df = df[['text', 'queue', 'type']].rename(columns={
@@ -39,31 +55,36 @@ class DataIngestion:
                 'type'  : 'issue_type'
             })
 
+            # Drop empty rows
             df = df[df['text'].str.strip() != ''].reset_index(drop=True)
             logger.info(f"Final shape: {df.shape}")
-            os.makedirs(os.path.dirname(self.ingestion_config.raw_data_path), exist_ok=True)
-            df.to_csv(self.ingestion_config.raw_data_path,index = False, header= True)
 
+            # Save raw
+            os.makedirs(os.path.dirname(self.ingestion_config.raw_data_path), exist_ok=True)
+            df.to_csv(self.ingestion_config.raw_data_path, index=False, header=True)
+
+            # Split
+            train_set, test_set = train_test_split(
+                df,
+                test_size    = 0.15,
+                random_state = 42,
+                stratify     = df['category']
+            )
 
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
-            # Creating Train and Test csv files and save it in data paths.
-            logger.info("Train test split Initiated")
+            train_set.to_csv(self.ingestion_config.train_data_path, index=False, header=True)
+            test_set.to_csv(self.ingestion_config.test_data_path,   index=False, header=True)
 
-            train_set,test_set = train_test_split(df,test_size = 0.15, random_state = 42,stratify = df['category'])
-            train_set.to_csv(self.ingestion_config.train_data_path, index = False , header  =True)
-            test_set.to_csv(self.ingestion_config.test_data_path,index = False , header = True)
             logger.info(f"Train: {len(train_set)} | Test: {len(test_set)}")
             logger.info("=== Data Ingestion Completed ===")
-            logger.info("Ingestion of train and test data completed")
-            return(
+
+            return (
                 self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path
             )
 
         except Exception as e:
-            raise CustomException(e,sys)
-
-
+            raise CustomException(e, sys)
 if __name__ == "__main__":
     obj = DataIngestion()
     source_path = obj.ingestion_config.source_data_path

@@ -37,11 +37,11 @@ class ModelTrainer:
             ])
             grid = GridSearchCV(
                 cat_pipeline,
-                {'clf__C':[0.1, 0.3, 0.5, 1.0, 2.0]},
-                cv=5,
-                scoring='f1_weighted',
-                n_jobs=-1,
-                verbose=1
+                {'clf__C': [0.05, 0.1, 0.3, 0.5, 1.0, 2.0, 5.0]},  # wider range
+                cv      = 5,
+                scoring = 'f1_weighted',
+                n_jobs  = -1,
+                verbose = 1
             )
             grid.fit(X_train,y_train_cat)
             best_cat_model = grid.best_estimator_
@@ -75,7 +75,7 @@ class ModelTrainer:
                 "model_version" : "v1.0",
                 "f1_category"   : f1_cat,
                 "f1_issue_type" : f1_type,
-                "best_C"        : grid.best_params_['clf__C']
+                "best_C": grid.best_params_.get('clf__C', grid.best_params_)
             })
             logger.info("=== Model Training Completed ===")
             return f1_cat, f1_type
