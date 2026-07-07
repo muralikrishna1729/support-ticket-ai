@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import sys
 from src.exception import CustomException
-from src.logger import logging
+from src.logger import logger
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 
@@ -18,26 +18,43 @@ class DataIngestion:
     def __init__(self):
         self.ingestion_config = DataIngestionConfig()
     
-    def initiate_data_ingestion(self):
-        logging.info("Entered the Data ingestion method or component")
+    def initiate_data_ingestion(self, source_path: str):
+        logger.info("=== Data Ingestion Started ===")
+        logger.info("Entered the Data ingestion method or component")
         try:
-            df = pd.read_csv(self.ingestion_config.source_data_path)
+            df = pd.read_csv(source_path)
             if df.empty:
                 raise Exception("Dataset is empty")
-            logging.info("Read the dataset as dataframe")
-            logging.info(f"Dataset shape: {df.shape}")
-            os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
+            logger.info("Read the dataset as dataframe")
+            logger.info(f"Dataset shape: {df.shape}")
+            df = df[df["language"]=="en"].reset_index(drop=True)
+            logger.info(f"After English filter: {df.shape}")
 
-            # Creating Train and Test csv files and save it in data paths.
+            # Combine subject + body
+            df["text"] = (df["subject"].fillna('')+' '+df['body'].fillna('')).str.strip()
 
+            # Select relevant columns
+            df = df[['text', 'queue', 'type']].rename(columns={
+                'queue' : 'category',
+                'type'  : 'issue_type'
+            })
+
+            df = df[df['text'].str.strip() != ''].reset_index(drop=True)
+            logger.info(f"Final shape: {df.shape}")
+            os.makedirs(os.path.dirname(self.ingestion_config.raw_data_path), exist_ok=True)
             df.to_csv(self.ingestion_config.raw_data_path,index = False, header= True)
-            logging.info("Train test split Initiated")
 
-            train_set,test_set = train_test_split(df,test_size = 0.2, random_state = 42)
+
+            os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
+            # Creating Train and Test csv files and save it in data paths.
+            logger.info("Train test split Initiated")
+
+            train_set,test_set = train_test_split(df,test_size = 0.15, random_state = 42,stratify = df['category'])
             train_set.to_csv(self.ingestion_config.train_data_path, index = False , header  =True)
             test_set.to_csv(self.ingestion_config.test_data_path,index = False , header = True)
-
-            logging.info("Ingestion of train and test data completed")
+            logger.info(f"Train: {len(train_set)} | Test: {len(test_set)}")
+            logger.info("=== Data Ingestion Completed ===")
+            logger.info("Ingestion of train and test data completed")
             return(
                 self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path
@@ -49,4 +66,5 @@ class DataIngestion:
 
 if __name__ == "__main__":
     obj = DataIngestion()
-    obj.initiate_data_ingestion()
+    source_path = obj.ingestion_config.source_data_path
+    obj.initiate_data_ingestion(source_path)

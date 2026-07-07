@@ -18,4 +18,8 @@ logging.basicConfig(
     format="[%(asctime)s] [Line:%(lineno)d] [%(name)s] [%(levelname)s] - %(message)s",
     level=logging.INFO,
 )
-
+logger = logging.getLogger("smartTicekt")
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(logging.Formatter("[%(asctime)s] [Line:%(lineno)d] [%(name)s] [%(levelname)s] - %(message)s"))
+logger.addHandler(console_handler)

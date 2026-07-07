@@ -1,3 +1,4 @@
+from copy import error
 import sys 
 from src.logger import logging
 
@@ -7,8 +8,14 @@ def error_message_detail(error,error_detail:sys):
     ## give the which file the excpetion is occured and which line all such details
 
     file_name = exc_tb.tb_frame.f_code.co_filename
-    error_message = "Error Occured in python Script name [{0}] line number [{1}] error message is [{2}]".format(file_name,exc_tb.tb_lineno, str(error)) 
+    line_number = exc_tb.tb_lineno
 
+    message = (
+        f"Error in script [{file_name}] "
+        f"at line [{line_number}] "
+        f"--->{str(error)}"
+    )
+    return message
 
 class CustomException(Exception):
     def __init__(self,error_message,error_detail:sys):
