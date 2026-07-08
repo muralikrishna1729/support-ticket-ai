@@ -3,6 +3,9 @@ import json
 import os
 from dotenv import load_dotenv
 from src.logger import logger
+from aws.ses_client import send_failure_alert
+from src.services.ticket_service import process_ticket_background
+
 
 load_dotenv()
 
@@ -51,3 +54,33 @@ def delete_message(receipt_handle: str) -> None:
         logger.info("SQS message deleted ✅")
     except Exception as e:
         logger.error(f"SQS delete failed: {str(e)}")
+
+
+def poll_and_process(sqs, queue_url):
+    response = sqs.receive_message(
+        QueueUrl=queue_url,
+        MaxNumberOfMessages=1,
+        WaitTimeSeconds=10
+    )
+    messages = response.get("Messages", [])
+    for msg in messages:
+        receipt_handle = msg["ReceiptHandle"]
+        try:
+            body = json.loads(msg["Body"])
+            ticket_id = body["ticket_id"]
+
+            process_ticket_background(ticket_id)
+
+            # Delete only after successful processing
+            sqs.delete_message(QueueUrl=queue_url, ReceiptHandle=receipt_handle)
+
+        except Exception as e:
+            logger.error(f"SQS message processing failed: {str(e)}")
+            try:
+                send_failure_alert(
+                    ticket_id=body.get("ticket_id", "unknown") if 'body' in dir() else "unknown",
+                    error_detail=str(e)
+                )
+            except Exception:
+                pass
+            # Don't delete — let it retry or go to DLQ per your redrive policy

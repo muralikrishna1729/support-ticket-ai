@@ -1,3 +1,5 @@
+from time import time
+
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from src.db import models
@@ -21,6 +23,8 @@ def create_ticket(db: Session, ticket_text: str):
 
 def process_ticket_background(ticket_id: int):
     db = sessionLocal()
+    start_time = time.time()
+    ticket = None
     try:
         ticket = db.query(models.Ticket).filter(models.Ticket.id == ticket_id).first()
         if not ticket:
@@ -37,12 +41,48 @@ def process_ticket_background(ticket_id: int):
         ticket.needs_review  = result["needs_review"]
         ticket.status = "completed"
         db.commit()
+
+
+        # ── CloudWatch metrics (still fine to keep) ────────────
+        try:
+            from aws.cloudwatch_client import log_prediction
+            processing_ms = (time.time() - start_time) * 1000
+            log_prediction(
+                category            = result["category"],
+                confidence          = result["confidence"],
+                needs_review        = result["needs_review"],
+                processing_time_ms  = processing_ms
+            )
+        except Exception as cw_err:
+            logger.error(f"CloudWatch logging failed: {str(cw_err)}")
+
+
         logger.info(f"Ticket ID {ticket_id} processed successfully.")
 
     except Exception as e:
-        logger.error(f"Error processing ticket ID {ticket_id}: {str(e)}")
-        ticket.status = "failed"
-        db.commit()
+        error_msg = str(e)
+        logger.error(f"Ticket {ticket_id} failed: {error_msg}")
+
+        if ticket:
+            ticket.status = "failed"
+            db.commit()
+        
+         # ── SES failure alert (only trigger point) ─────────────
+        try:
+            from aws.ses_client import send_failure_alert
+            send_failure_alert(
+                ticket_id    = ticket_id,
+                error_detail = error_msg,
+                ticket_text  = ticket.ticket_text if ticket else ""
+            )
+        except Exception as email_err:
+            logger.error(f"SES alert failed silently: {str(email_err)}")
+        
+        try:
+            from aws.cloudwatch_client import log_error
+            log_error("PredictionError")
+        except Exception:
+            pass
     finally:
         db.close()
 
