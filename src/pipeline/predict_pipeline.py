@@ -36,11 +36,11 @@ def ensure_models_exist():
     try:
         from aws.s3_client import download_file
         for local_path in [MODEL_PATHS[name] for name in missing]:
-            s3_key = os.path.basename(local_path)
-            download_file(s3_key, local_path= local_path)
+            s3_key = local_path  # keep the "models/" prefix intact
+            download_file(s3_key, local_path=local_path)
     except Exception as e:
         logger.error(f"S3 download failed: {str(e)}")
-        raise CustomException(e,sys)
+        raise CustomException(e, sys)
     
 class PredictPipeline:
     def __init__(self):
