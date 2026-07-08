@@ -1,4 +1,4 @@
-from time import time
+import time
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
