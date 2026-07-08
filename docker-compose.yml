@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: smartticket-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ticketuser
+      POSTGRES_PASSWORD: ticketpass
+      POSTGRES_DB: smartticket
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ticketuser -d smartticket"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  pgdata:
