@@ -28,19 +28,33 @@ RESPONSES = {
 
 def ensure_models_exist():
     """Download from S3 if models missing locally."""
-    missing = [name for name, path in MODEL_PATHS.items() if not os.path.exists(path)]
+    missing = [name for name, path in MODEL_PATHS.items()
+               if not os.path.exists(path)]
     if not missing:
         logger.info("All models found locally ✅")
         return
+
     logger.info(f"{len(missing)} model(s) missing → downloading from S3")
-    try:
-        from aws.s3_client import download_file
-        for local_path in [MODEL_PATHS[name] for name in missing]:
-            s3_key = local_path  # keep the "models/" prefix intact
-            download_file(s3_key, local_path=local_path)
-    except Exception as e:
-        logger.error(f"S3 download failed: {str(e)}")
-        raise CustomException(e, sys)
+
+    from aws.s3_client import download_file
+
+    failed = []
+    for name in missing:
+        local_path = MODEL_PATHS[name]
+        success = download_file(s3_key=local_path, local_path=local_path)
+        if not success:
+            failed.append(local_path)
+
+    if failed:
+        # Log which files failed
+        for f in failed:
+            logger.error(f"Failed to download: {f}")
+        raise RuntimeError(
+            f"Could not download {len(failed)} model(s) from S3: {failed}"
+        )
+
+    logger.info("All models downloaded from S3 ✅")
+
     
 class PredictPipeline:
     def __init__(self):
