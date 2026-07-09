@@ -58,8 +58,12 @@ def ensure_models_exist():
     
 class PredictPipeline:
     def __init__(self):
-        if os.getenv("TESTING") != "true":
-            ensure_models_exist()
+        if os.getenv("TESTING") == "true":
+            logger.info("TESTING mode: skipping model load")
+            self.tfidf = self.clf_category = self.clf_issue_type = None
+            self.le_category = self.le_issue_type = None
+            return
+        ensure_models_exist()
         logger.info("Loading model artifacts...")
         self.tfidf          = load_object(MODEL_PATHS["tfidf"])
         self.clf_category   = load_object(MODEL_PATHS["clf_category"])
