@@ -8,7 +8,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ./models:/app/models
       - ./logs:/app/logs
 
   worker:
@@ -19,5 +18,4 @@ services:
     env_file:
       - .env
     volumes:
-      - ./models:/app/models
       - ./logs:/app/logs
