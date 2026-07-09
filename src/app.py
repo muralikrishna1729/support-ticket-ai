@@ -16,7 +16,7 @@ app.include_router(router)
 @app.get("/")
 def home():
     return {
-        "message" : "SmartTicket AI is live 🚀",
+        "message" : "SmartTicket AI is live",
         "version" : "1.0.0",
         "docs"    : "/docs"
     }
