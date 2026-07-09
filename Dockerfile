@@ -2,15 +2,13 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first (Docker cache optimization)
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
+# Use production requirements only
+COPY requirements.prod.txt .
+RUN pip install --no-cache-dir -r requirements.prod.txt
 
 COPY . .
 
