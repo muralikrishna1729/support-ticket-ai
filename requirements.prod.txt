@@ -12,7 +12,8 @@ uvicorn==0.32.1
 pydantic==2.7.0
 
 # Frontend
-streamlit==1.59.0
+# Frontend
+streamlit==1.39.0
 streamlit-option-menu==0.4.0
 
 # Database
