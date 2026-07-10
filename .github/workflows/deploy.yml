@@ -75,9 +75,9 @@ jobs:
 
             # Rebuild and restart containers
             docker compose -f docker-compose.prod.yml down
-            docker compose -f docker-compose.prod.yml build --no-cache
+            docker compose -f docker-compose.prod.yml build
             docker compose -f docker-compose.prod.yml up -d
 
             # Verify health
             sleep 15
-            curl -f http://localhost:8000/health && echo "✅ Deploy successful!" || echo "❌ Health check failed!"
+            curl -f http://localhost/api/health
