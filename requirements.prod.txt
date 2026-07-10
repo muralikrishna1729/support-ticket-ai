@@ -7,8 +7,8 @@ joblib==1.5.3
 threadpoolctl==3.6.0
 
 # API
-fastapi==0.104.1
-uvicorn==0.24.0
+fastapi==0.115.6
+uvicorn==0.32.1
 pydantic==2.7.0
 
 # Frontend
