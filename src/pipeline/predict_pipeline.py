@@ -27,7 +27,11 @@ RESPONSES = {
 }
 
 def ensure_models_exist():
-    """Download from S3 if models missing locally."""
+    """Download from S3 if models missing locally.
+    Non-fatal without AWS: if S3 is not configured we log a warning and
+    continue with whatever is in models/. We only raise when a download
+    partially fails, since a partial set of artifacts is corrupted.
+    """
     missing = [name for name, path in MODEL_PATHS.items()
                if not os.path.exists(path)]
     if not missing:
@@ -45,8 +49,14 @@ def ensure_models_exist():
         if not success:
             failed.append(local_path)
 
-    if failed:
+    if len(failed) == len(missing):
         # Log which files failed
+        logger.warning(
+            f"{len(failed)} model(s) missing and S3 unavailable "
+            f"(not configured or no credentials) — continuing with local models"
+        )
+        return
+    if failed:
         for f in failed:
             logger.error(f"Failed to download: {f}")
         raise RuntimeError(

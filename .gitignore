@@ -61,6 +61,7 @@ Thumbs.db
 # 🔹 SQLite database
 *.sqlite3
 db.sqlite3
+tickets.db
 
 # 🔹 Temporary files
 *.swp
@@ -97,3 +98,6 @@ instance/
 # 🔹 Docker
 *.pid
 *.seed
+
+# 🔹 MLflow tracking
+mlruns/

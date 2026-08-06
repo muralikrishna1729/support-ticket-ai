@@ -7,7 +7,13 @@ from src.db.database import sessionLocal
 from src.logger import logger
 from src.pipeline.predict_pipeline import PredictPipeline
 
-pipeline = PredictPipeline()
+_pipeline = None
+
+def get_predict_pipeline():
+    global _pipeline
+    if _pipeline is None:
+        _pipeline = PredictPipeline()
+    return _pipeline
 
 def create_ticket(db: Session, ticket_text: str):
     logger.info("Creating a new ticket...")
@@ -33,7 +39,7 @@ def process_ticket_background(ticket_id: int):
         ticket.status = "processing"
         db.commit()
         logger.info(f"Processing ticket ID {ticket_id}...")
-        result = pipeline.predict(ticket.ticket_text)
+        result = get_predict_pipeline().predict(ticket.ticket_text)
         ticket.category      = result["category"]
         ticket.issue_type    = result["issue_type"]
         ticket.auto_response = result["auto_response"]

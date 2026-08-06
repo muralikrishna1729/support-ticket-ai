@@ -22,7 +22,7 @@ def test_home_endpoint():
 
 @pytest.fixture(autouse=True)
 def mock_pipeline():
-    with patch("src.services.ticket_service.pipeline", MagicMock()) as mock:
+    with patch("src.services.ticket_service.get_predict_pipeline", MagicMock()) as mock:
         mock.predict.return_value = {
             "category": "Technical Support",
             "issue_type": "Incident",
