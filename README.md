@@ -94,10 +94,21 @@ streamlit run streamlit_app.py
 
 ## 📊 Performance Metrics
 
-The models were evaluated using weighted F1-scores to account for class imbalance:
+The models were evaluated using weighted F1-scores to account for class imbalance
+(source of truth: `models/model_scores.json`, current version `v3.0-negation-tfidf`):
 
-* **Category Classification:** LinearSVC (GridSearch) ~ **0.68**
-* **Issue Type Prediction:** LinearSVC ~ **0.89**
+* **Category Classification:** Negation-tagged TF-IDF + LinearSVC (GridSearch) ~ **0.53**
+* **Issue Type Prediction:** LinearSVC ~ **0.81**
+
+**Model selection:** feature-extraction techniques were benchmarked on the same
+train/test split with `benchmark_techniques.py` (results in
+`experiment_results.json`): plain TF-IDF (0.529), frozen sentence embeddings
+`all-MiniLM-L6-v2` (0.340), TF-IDF ⊕ embeddings concatenation (0.364) and
+**negation-tagged TF-IDF (0.532 — winner)**. Generic embeddings lost badly on
+this domain-specific vocabulary, so the pipeline stays pure scikit-learn;
+negation tagging gives "cannot access" (`not NEG_access`) a distinct token
+signature from "can access" (`access`). Low-confidence predictions (max
+`decision_function` score < 0.60) are flagged `needs_review` for human triage.
 
 ---
 

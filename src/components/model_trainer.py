@@ -2,6 +2,8 @@ import os
 import sys
 from dataclasses import dataclass
 from sklearn.svm import LinearSVC
+#from sklearn.linear_model import LogisticRegression
+
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report, f1_score
@@ -72,7 +74,7 @@ class ModelTrainer:
             save_object(self.config.category_model_path,   best_cat_model)
             save_object(self.config.issue_type_model_path, issue_clf)
             save_json(self.config.scores_path, {
-                "model_version" : "v1.0",
+                "model_version" : "v3.0-negation-tfidf",
                 "f1_category"   : f1_cat,
                 "f1_issue_type" : f1_type,
                 "best_C": grid.best_params_.get('clf__C', grid.best_params_)

@@ -101,3 +101,5 @@ instance/
 
 # 🔹 MLflow tracking
 mlruns/
+# Embedding/feature experiment cache
+artifacts/cache/

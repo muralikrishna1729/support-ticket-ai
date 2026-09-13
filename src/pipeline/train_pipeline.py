@@ -38,6 +38,6 @@ if __name__ == "__main__":
     SOURCE   = "notebook/data/dataset-tickets-multi-lang-4-20k.csv"
     pipeline = TrainPipeline()
     f1_cat, f1_type = pipeline.run(SOURCE)
-    print(f"\n✅ Training complete!")
+    print(f"\n[OK] Training complete!")
     print(f"   Category F1   : {f1_cat}")
     print(f"   Issue Type F1 : {f1_type}")

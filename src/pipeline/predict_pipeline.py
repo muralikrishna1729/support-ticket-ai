@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 from src.logger import logger
 from src.exception import CustomException
 from src.utils import load_object
@@ -80,25 +81,25 @@ class PredictPipeline:
         self.clf_issue_type = load_object(MODEL_PATHS["clf_issue_type"])
         self.le_category    = load_object(MODEL_PATHS["le_category"])
         self.le_issue_type  = load_object(MODEL_PATHS["le_issue_type"])
-        logger.info("All artifacts loaded ✅")
+        logger.info("All artifacts loaded ")
     
     def predict(self,text:str)->dict:
         try:
             dt         = DataTransformation()
             clean      = dt.clean_text(text)
-            text_tfidf = self.tfidf.transform([clean])
+            features   = self.tfidf.transform([clean])
 
             # Category prediction + confidence
-            cat_enc    = self.clf_category.predict(text_tfidf)[0]
+            cat_enc    = self.clf_category.predict(features)[0]
             category   = self.le_category.inverse_transform([cat_enc])[0]
 
             # Confidence score
-            cat_scores  = self.clf_category.decision_function(text_tfidf)[0]
+            cat_scores  = self.clf_category.decision_function(features)[0]
             confidence  = round(float(max(cat_scores)), 4)
             needs_review = confidence < 0.60
 
             # Issue type prediction
-            type_enc   = self.clf_issue_type.predict(text_tfidf)[0]
+            type_enc   = self.clf_issue_type.predict(features)[0]
             issue_type = self.le_issue_type.inverse_transform([type_enc])[0]
 
             # Auto response
