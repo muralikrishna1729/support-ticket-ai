@@ -110,6 +110,27 @@ negation tagging gives "cannot access" (`not NEG_access`) a distinct token
 signature from "can access" (`access`). Low-confidence predictions (max
 `decision_function` score < 0.60) are flagged `needs_review` for human triage.
 
+**Taxonomy diagnosis** (`diagnose_taxonomy.py`, full numbers in
+`taxonomy_results.json`):
+
+* Near-duplicate *templates* (TF-IDF cosine ≥ 0.7, 17% of the corpus) are
+  **99.6% label-consistent** — the label noise is not copy-paste relabeling.
+* At topic level (similarity ≥ 0.5 transitive groups covering 43% of the
+  corpus), **8.2% of tickets carry conflicting labels** (7.3% in heavily
+  inconsistent groups) — the noise is paraphrase-level boundary overlap.
+* The production model's confusion is concentrated in one four-way cluster:
+  Technical / Product / IT / Customer Support bleed 6–24% into each other
+  pairwise (e.g. Product → Technical 21.9%, IT → Technical 23.9%).
+* Merging those four into one category lifts **macro F1 0.5207 → 0.6116**
+  (retrained on 7 labels; 0.5979 if the same 10-cat model's predictions are
+  merged post-hoc). This quantifies how much of the error ceiling is
+  taxonomy, not model. The merged bucket is 75% of the corpus — too coarse
+  for real team routing — so the 10-category model ships with the confusion
+  cluster documented and `needs_review` prioritized at that boundary.
+* A stratified 249-row hand-labeling subset
+  (`make_validation_subset.py` → `artifacts/validation_subset.csv`) is
+  prepared to separate model error from label error on held-out data.
+
 ---
 
 ## 📁 Project Structure

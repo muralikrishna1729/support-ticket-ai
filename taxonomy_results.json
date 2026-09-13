@@ -1,0 +1,340 @@
+{
+  "sim_threshold": 0.5,
+  "label_consistency": {
+    "sim_threshold": 0.5,
+    "near_dup_pairs": 8156,
+    "n_groups": 2412,
+    "grouped_tickets": 5775,
+    "pct_tickets_in_groups": 43.38,
+    "pct_grouped_tickets_label_inconsistent": 8.16,
+    "pct_grouped_tickets_heavily_inconsistent": 7.29,
+    "mean_group_purity": 0.9811,
+    "worst_groups": [
+      {
+        "size": 34,
+        "purity": 0.324,
+        "labels": {
+          "IT Support": 2,
+          "Technical Support": 11,
+          "Customer Service": 4,
+          "Sales and Pre-Sales": 2,
+          "General Inquiry": 1,
+          "Product Support": 3,
+          "Billing and Payments": 8,
+          "Returns and Exchanges": 1,
+          "Service Outages and Maintenance": 2
+        }
+      },
+      {
+        "size": 6,
+        "purity": 0.333,
+        "labels": {
+          "Human Resources": 1,
+          "Product Support": 1,
+          "Technical Support": 2,
+          "IT Support": 1,
+          "Service Outages and Maintenance": 1
+        }
+      },
+      {
+        "size": 12,
+        "purity": 0.333,
+        "labels": {
+          "Sales and Pre-Sales": 1,
+          "Customer Service": 4,
+          "Technical Support": 2,
+          "Human Resources": 1,
+          "Billing and Payments": 2,
+          "IT Support": 2
+        }
+      },
+      {
+        "size": 3,
+        "purity": 0.333,
+        "labels": {
+          "Returns and Exchanges": 1,
+          "Product Support": 1,
+          "Customer Service": 1
+        }
+      },
+      {
+        "size": 3,
+        "purity": 0.333,
+        "labels": {
+          "Product Support": 1,
+          "Returns and Exchanges": 1,
+          "Service Outages and Maintenance": 1
+        }
+      },
+      {
+        "size": 8,
+        "purity": 0.375,
+        "labels": {
+          "Customer Service": 3,
+          "Billing and Payments": 1,
+          "IT Support": 3,
+          "Technical Support": 1
+        }
+      },
+      {
+        "size": 8,
+        "purity": 0.375,
+        "labels": {
+          "Customer Service": 3,
+          "Product Support": 3,
+          "Technical Support": 2
+        }
+      },
+      {
+        "size": 8,
+        "purity": 0.375,
+        "labels": {
+          "Sales and Pre-Sales": 2,
+          "Product Support": 3,
+          "Technical Support": 3
+        }
+      }
+    ]
+  },
+  "confusion_analysis": {
+    "classes": [
+      "Billing and Payments",
+      "Customer Service",
+      "General Inquiry",
+      "Human Resources",
+      "IT Support",
+      "Product Support",
+      "Returns and Exchanges",
+      "Sales and Pre-Sales",
+      "Service Outages and Maintenance",
+      "Technical Support"
+    ],
+    "macro_f1": 0.5207,
+    "weighted_f1": 0.5286,
+    "n_test_rows": 1996,
+    "confusion_bleed": [
+      {
+        "from": "Human Resources",
+        "to": "Technical Support",
+        "pct_of_true_class": 24.2,
+        "count": 8
+      },
+      {
+        "from": "IT Support",
+        "to": "Technical Support",
+        "pct_of_true_class": 23.9,
+        "count": 56
+      },
+      {
+        "from": "Product Support",
+        "to": "Technical Support",
+        "pct_of_true_class": 21.9,
+        "count": 81
+      },
+      {
+        "from": "Returns and Exchanges",
+        "to": "Technical Support",
+        "pct_of_true_class": 18.6,
+        "count": 18
+      },
+      {
+        "from": "Customer Service",
+        "to": "Product Support",
+        "pct_of_true_class": 16.1,
+        "count": 50
+      },
+      {
+        "from": "Customer Service",
+        "to": "Technical Support",
+        "pct_of_true_class": 16.1,
+        "count": 50
+      },
+      {
+        "from": "General Inquiry",
+        "to": "IT Support",
+        "pct_of_true_class": 14.8,
+        "count": 4
+      },
+      {
+        "from": "General Inquiry",
+        "to": "Product Support",
+        "pct_of_true_class": 14.8,
+        "count": 4
+      },
+      {
+        "from": "Technical Support",
+        "to": "Product Support",
+        "pct_of_true_class": 14.6,
+        "count": 85
+      },
+      {
+        "from": "Sales and Pre-Sales",
+        "to": "Product Support",
+        "pct_of_true_class": 14.3,
+        "count": 8
+      },
+      {
+        "from": "Service Outages and Maintenance",
+        "to": "Technical Support",
+        "pct_of_true_class": 13.5,
+        "count": 10
+      },
+      {
+        "from": "Sales and Pre-Sales",
+        "to": "Customer Service",
+        "pct_of_true_class": 12.5,
+        "count": 7
+      },
+      {
+        "from": "Product Support",
+        "to": "Customer Service",
+        "pct_of_true_class": 12.2,
+        "count": 45
+      },
+      {
+        "from": "Human Resources",
+        "to": "Product Support",
+        "pct_of_true_class": 12.1,
+        "count": 4
+      },
+      {
+        "from": "Technical Support",
+        "to": "IT Support",
+        "pct_of_true_class": 11.9,
+        "count": 69
+      },
+      {
+        "from": "Customer Service",
+        "to": "IT Support",
+        "pct_of_true_class": 11.6,
+        "count": 36
+      },
+      {
+        "from": "IT Support",
+        "to": "Customer Service",
+        "pct_of_true_class": 11.5,
+        "count": 27
+      },
+      {
+        "from": "General Inquiry",
+        "to": "Customer Service",
+        "pct_of_true_class": 11.1,
+        "count": 3
+      },
+      {
+        "from": "General Inquiry",
+        "to": "Technical Support",
+        "pct_of_true_class": 11.1,
+        "count": 3
+      },
+      {
+        "from": "Service Outages and Maintenance",
+        "to": "IT Support",
+        "pct_of_true_class": 10.8,
+        "count": 8
+      },
+      {
+        "from": "Sales and Pre-Sales",
+        "to": "Technical Support",
+        "pct_of_true_class": 10.7,
+        "count": 6
+      },
+      {
+        "from": "Returns and Exchanges",
+        "to": "Customer Service",
+        "pct_of_true_class": 10.3,
+        "count": 10
+      },
+      {
+        "from": "Returns and Exchanges",
+        "to": "Product Support",
+        "pct_of_true_class": 10.3,
+        "count": 10
+      },
+      {
+        "from": "Technical Support",
+        "to": "Customer Service",
+        "pct_of_true_class": 10.0,
+        "count": 58
+      },
+      {
+        "from": "Billing and Payments",
+        "to": "Customer Service",
+        "pct_of_true_class": 9.0,
+        "count": 19
+      },
+      {
+        "from": "IT Support",
+        "to": "Product Support",
+        "pct_of_true_class": 8.1,
+        "count": 19
+      },
+      {
+        "from": "Service Outages and Maintenance",
+        "to": "Product Support",
+        "pct_of_true_class": 8.1,
+        "count": 6
+      },
+      {
+        "from": "Product Support",
+        "to": "IT Support",
+        "pct_of_true_class": 6.2,
+        "count": 23
+      },
+      {
+        "from": "Human Resources",
+        "to": "Billing and Payments",
+        "pct_of_true_class": 6.1,
+        "count": 2
+      },
+      {
+        "from": "Customer Service",
+        "to": "Billing and Payments",
+        "pct_of_true_class": 5.8,
+        "count": 18
+      },
+      {
+        "from": "Sales and Pre-Sales",
+        "to": "Billing and Payments",
+        "pct_of_true_class": 5.4,
+        "count": 3
+      },
+      {
+        "from": "Sales and Pre-Sales",
+        "to": "IT Support",
+        "pct_of_true_class": 5.4,
+        "count": 3
+      },
+      {
+        "from": "Sales and Pre-Sales",
+        "to": "Returns and Exchanges",
+        "pct_of_true_class": 5.4,
+        "count": 3
+      },
+      {
+        "from": "Returns and Exchanges",
+        "to": "Billing and Payments",
+        "pct_of_true_class": 5.2,
+        "count": 5
+      }
+    ]
+  },
+  "merge_test": {
+    "n_categories_after_merge": 7,
+    "merged_category": "Technical & Customer Support",
+    "merged_from": [
+      "Customer Service",
+      "IT Support",
+      "Product Support",
+      "Technical Support"
+    ],
+    "ten_cat_macro_f1": 0.5207,
+    "ten_cat_weighted_f1": 0.5286,
+    "posthoc_merged_macro_f1": 0.5979,
+    "posthoc_merged_weighted_f1": 0.8278,
+    "retrained_macro_f1": null,
+    "retrained_weighted_f1": null,
+    "retrained_best_C": null,
+    "bucket_sizes": null
+  }
+}
