@@ -1,0 +1,40 @@
+{
+  "n_labeled": 249,
+  "model_vs_hand_macro_f1": 0.252,
+  "model_vs_hand_weighted_f1": 0.2418,
+  "dataset_vs_hand_agreement_pct": 25.3,
+  "buckets": {
+    "label_error_model_learned_noise": {
+      "count": 97,
+      "pct": 39.0
+    },
+    "all_disagree": {
+      "count": 65,
+      "pct": 26.1
+    },
+    "all_agree": {
+      "count": 39,
+      "pct": 15.7
+    },
+    "label_error_model_right": {
+      "count": 24,
+      "pct": 9.6
+    },
+    "model_error": {
+      "count": 24,
+      "pct": 9.6
+    }
+  },
+  "disagreements_by_dataset_category": {
+    "Technical Support": 56,
+    "Product Support": 43,
+    "Customer Service": 36,
+    "IT Support": 26,
+    "Billing and Payments": 18,
+    "Returns and Exchanges": 12,
+    "Service Outages and Maintenance": 8,
+    "Sales and Pre-Sales": 5,
+    "General Inquiry": 3,
+    "Human Resources": 3
+  }
+}
