@@ -267,14 +267,24 @@ def main():
     ap.add_argument("--skip-retrain", action="store_true")
     args = ap.parse_args()
 
-    results = {"sim_threshold": args.sim}
+    # Accumulate results across runs instead of overwriting: label
+    # consistency is keyed by threshold, and a --skip-retrain run keeps
+    # previously trained merge-test numbers.
+    if os.path.exists(RESULTS_PATH):
+        with open(RESULTS_PATH) as f:
+            results = json.load(f)
+    else:
+        results = {}
+    results.pop("sim_threshold", None)        # ambiguous after multiple runs
+    results.pop("label_consistency", None)    # legacy pre-threshold key
+    results.setdefault("label_consistency_by_threshold", {})
 
     print("=== A. LABEL CONSISTENCY (near-duplicate clustering) ===")
     df = pd.read_csv(DATA_PATH)
     print(f"Corpus: {len(df):,} labeled rows from {DATA_PATH}")
     t0 = time.time()
     a = label_consistency(df, args.sim)
-    results["label_consistency"] = a
+    results["label_consistency_by_threshold"][f"sim_{args.sim}"] = a
     print(f"  near-dup pairs (sim>={args.sim}) : {a['near_dup_pairs']:,}")
     print(f"  multi-ticket groups              : {a['n_groups']:,} "
           f"covering {a['grouped_tickets']:,} tickets "
@@ -303,6 +313,13 @@ def main():
     print("\n=== C. MERGE TEST (merge the confused cluster -> 1 category) ===")
     t0 = time.time()
     c = merge_experiment(conf, args.skip_retrain)
+    prev = results.get("merge_test") or {}
+    if args.skip_retrain and prev.get("retrained_macro_f1") is not None:
+        # preserve the earlier full run's trained numbers
+        c.update({k: prev[k] for k in ("retrained_macro_f1",
+                                       "retrained_weighted_f1",
+                                       "retrained_best_C",
+                                       "bucket_sizes")})
     results["merge_test"] = c
     print(f"  merge: {sorted(MERGE_TARGETS)} -> '{MERGED_NAME}'")
     if c["bucket_sizes"]:

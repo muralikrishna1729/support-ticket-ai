@@ -1,101 +1,4 @@
 {
-  "sim_threshold": 0.5,
-  "label_consistency": {
-    "sim_threshold": 0.5,
-    "near_dup_pairs": 8156,
-    "n_groups": 2412,
-    "grouped_tickets": 5775,
-    "pct_tickets_in_groups": 43.38,
-    "pct_grouped_tickets_label_inconsistent": 8.16,
-    "pct_grouped_tickets_heavily_inconsistent": 7.29,
-    "mean_group_purity": 0.9811,
-    "worst_groups": [
-      {
-        "size": 34,
-        "purity": 0.324,
-        "labels": {
-          "IT Support": 2,
-          "Technical Support": 11,
-          "Customer Service": 4,
-          "Sales and Pre-Sales": 2,
-          "General Inquiry": 1,
-          "Product Support": 3,
-          "Billing and Payments": 8,
-          "Returns and Exchanges": 1,
-          "Service Outages and Maintenance": 2
-        }
-      },
-      {
-        "size": 6,
-        "purity": 0.333,
-        "labels": {
-          "Human Resources": 1,
-          "Product Support": 1,
-          "Technical Support": 2,
-          "IT Support": 1,
-          "Service Outages and Maintenance": 1
-        }
-      },
-      {
-        "size": 12,
-        "purity": 0.333,
-        "labels": {
-          "Sales and Pre-Sales": 1,
-          "Customer Service": 4,
-          "Technical Support": 2,
-          "Human Resources": 1,
-          "Billing and Payments": 2,
-          "IT Support": 2
-        }
-      },
-      {
-        "size": 3,
-        "purity": 0.333,
-        "labels": {
-          "Returns and Exchanges": 1,
-          "Product Support": 1,
-          "Customer Service": 1
-        }
-      },
-      {
-        "size": 3,
-        "purity": 0.333,
-        "labels": {
-          "Product Support": 1,
-          "Returns and Exchanges": 1,
-          "Service Outages and Maintenance": 1
-        }
-      },
-      {
-        "size": 8,
-        "purity": 0.375,
-        "labels": {
-          "Customer Service": 3,
-          "Billing and Payments": 1,
-          "IT Support": 3,
-          "Technical Support": 1
-        }
-      },
-      {
-        "size": 8,
-        "purity": 0.375,
-        "labels": {
-          "Customer Service": 3,
-          "Product Support": 3,
-          "Technical Support": 2
-        }
-      },
-      {
-        "size": 8,
-        "purity": 0.375,
-        "labels": {
-          "Sales and Pre-Sales": 2,
-          "Product Support": 3,
-          "Technical Support": 3
-        }
-      }
-    ]
-  },
   "confusion_analysis": {
     "classes": [
       "Billing and Payments",
@@ -332,9 +235,188 @@
     "ten_cat_weighted_f1": 0.5286,
     "posthoc_merged_macro_f1": 0.5979,
     "posthoc_merged_weighted_f1": 0.8278,
-    "retrained_macro_f1": null,
-    "retrained_weighted_f1": null,
-    "retrained_best_C": null,
-    "bucket_sizes": null
+    "retrained_macro_f1": 0.6116,
+    "retrained_weighted_f1": 0.8387,
+    "retrained_best_C": 2.0,
+    "bucket_sizes": {
+      "train_rows": 11316,
+      "test_rows": 1997,
+      "merged_bucket_total": 9976,
+      "pct_merged_of_total": 74.9
+    }
+  },
+  "label_consistency_by_threshold": {
+    "sim_0.7": {
+      "sim_threshold": 0.7,
+      "near_dup_pairs": 2756,
+      "n_groups": 1022,
+      "grouped_tickets": 2256,
+      "pct_tickets_in_groups": 16.95,
+      "pct_grouped_tickets_label_inconsistent": 0.93,
+      "pct_grouped_tickets_heavily_inconsistent": 0.75,
+      "mean_group_purity": 0.996,
+      "worst_groups": [
+        {
+          "size": 2,
+          "purity": 0.5,
+          "labels": {
+            "Sales and Pre-Sales": 1,
+            "Billing and Payments": 1
+          }
+        },
+        {
+          "size": 2,
+          "purity": 0.5,
+          "labels": {
+            "Product Support": 1,
+            "IT Support": 1
+          }
+        },
+        {
+          "size": 2,
+          "purity": 0.5,
+          "labels": {
+            "Product Support": 1,
+            "Returns and Exchanges": 1
+          }
+        },
+        {
+          "size": 2,
+          "purity": 0.5,
+          "labels": {
+            "Product Support": 1,
+            "Returns and Exchanges": 1
+          }
+        },
+        {
+          "size": 2,
+          "purity": 0.5,
+          "labels": {
+            "Technical Support": 1,
+            "Customer Service": 1
+          }
+        },
+        {
+          "size": 2,
+          "purity": 0.5,
+          "labels": {
+            "General Inquiry": 1,
+            "Product Support": 1
+          }
+        },
+        {
+          "size": 2,
+          "purity": 0.5,
+          "labels": {
+            "Technical Support": 1,
+            "Service Outages and Maintenance": 1
+          }
+        },
+        {
+          "size": 3,
+          "purity": 0.667,
+          "labels": {
+            "Customer Service": 2,
+            "IT Support": 1
+          }
+        }
+      ]
+    },
+    "sim_0.5": {
+      "sim_threshold": 0.5,
+      "near_dup_pairs": 8156,
+      "n_groups": 2412,
+      "grouped_tickets": 5775,
+      "pct_tickets_in_groups": 43.38,
+      "pct_grouped_tickets_label_inconsistent": 8.16,
+      "pct_grouped_tickets_heavily_inconsistent": 7.29,
+      "mean_group_purity": 0.9811,
+      "worst_groups": [
+        {
+          "size": 34,
+          "purity": 0.324,
+          "labels": {
+            "IT Support": 2,
+            "Technical Support": 11,
+            "Customer Service": 4,
+            "Sales and Pre-Sales": 2,
+            "General Inquiry": 1,
+            "Product Support": 3,
+            "Billing and Payments": 8,
+            "Returns and Exchanges": 1,
+            "Service Outages and Maintenance": 2
+          }
+        },
+        {
+          "size": 6,
+          "purity": 0.333,
+          "labels": {
+            "Human Resources": 1,
+            "Product Support": 1,
+            "Technical Support": 2,
+            "IT Support": 1,
+            "Service Outages and Maintenance": 1
+          }
+        },
+        {
+          "size": 12,
+          "purity": 0.333,
+          "labels": {
+            "Sales and Pre-Sales": 1,
+            "Customer Service": 4,
+            "Technical Support": 2,
+            "Human Resources": 1,
+            "Billing and Payments": 2,
+            "IT Support": 2
+          }
+        },
+        {
+          "size": 3,
+          "purity": 0.333,
+          "labels": {
+            "Returns and Exchanges": 1,
+            "Product Support": 1,
+            "Customer Service": 1
+          }
+        },
+        {
+          "size": 3,
+          "purity": 0.333,
+          "labels": {
+            "Product Support": 1,
+            "Returns and Exchanges": 1,
+            "Service Outages and Maintenance": 1
+          }
+        },
+        {
+          "size": 8,
+          "purity": 0.375,
+          "labels": {
+            "Customer Service": 3,
+            "Billing and Payments": 1,
+            "IT Support": 3,
+            "Technical Support": 1
+          }
+        },
+        {
+          "size": 8,
+          "purity": 0.375,
+          "labels": {
+            "Customer Service": 3,
+            "Product Support": 3,
+            "Technical Support": 2
+          }
+        },
+        {
+          "size": 8,
+          "purity": 0.375,
+          "labels": {
+            "Sales and Pre-Sales": 2,
+            "Product Support": 3,
+            "Technical Support": 3
+          }
+        }
+      ]
+    }
   }
 }
