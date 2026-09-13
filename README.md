@@ -127,9 +127,18 @@ signature from "can access" (`access`). Low-confidence predictions (max
   taxonomy, not model. The merged bucket is 75% of the corpus — too coarse
   for real team routing — so the 10-category model ships with the confusion
   cluster documented and `needs_review` prioritized at that boundary.
-* A stratified 249-row hand-labeling subset
-  (`make_validation_subset.py` → `artifacts/validation_subset.csv`) is
-  prepared to separate model error from label error on held-out data.
+* A stratified 249-row validation subset was labeled with an **AI-assisted blind
+  reading** (`label_validation_subset.py`, applied via `apply_ai_labels.py`;
+  rubric + ambiguity notes in `artifacts/ai_labels.json`) — **not yet
+  human-verified**. Breakdown (`validation_breakdown.py` →
+  `validation_review.json`): **≥9.6% of rows are confirmed dataset-label
+  errors** (model + independent reading concur against the dataset), 39%
+  learned-noise candidates, 26% three-way disagreements. Against this
+  independent reading the model scores weighted F1 0.24 (vs 0.55 against the
+  dataset's own labels) — evidence the model largely learned the dataset's
+  template→label mapping rather than text semantics. A prioritized 186-row
+  shortlist (`artifacts/validation_disagreements_for_human_review.csv`)
+  awaits human adjudication before final numbers are quoted.
 
 ---
 

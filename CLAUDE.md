@@ -113,6 +113,11 @@ prefix) feeding the same TF-IDF + LinearSVC stack. `diagnose_taxonomy.py` handle
 confusion-matrix / label-noise analysis (results in `taxonomy_results.json`), and
 `benchmark_techniques.py` holds the feature-technique bake-off (`experiment_results.json`).
 
+Taxonomy-validation workflow: `make_validation_subset.py` (stratified 249-row subset) →
+`label_validation_subset.py` / `apply_ai_labels.py` (blind AI-assisted labels, human
+adjudication pending on the 186-row shortlist) → `validation_breakdown.py`
+(model-vs-dataset-vs-hand split; results in `validation_review.json`).
+
 ### Training
 ```bash
 python -m src.pipeline.train_pipeline    # uses hardcoded notebook/data/dataset-tickets-multi-lang-4-20k.csv
